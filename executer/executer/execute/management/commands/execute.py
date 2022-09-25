@@ -22,7 +22,7 @@ class Command(BaseCommand):
         while True:
             thread = threading.Thread(target=self.run_task)
             thread.start()
-            await asyncio.sleep(1)
+            await asyncio.sleep(10)
 
     async def get_time(self):
         time = random.randint(15, 40)
