@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pipenv sync
+exec pipenv run python app_test.py

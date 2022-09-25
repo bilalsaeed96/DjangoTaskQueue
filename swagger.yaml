@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Task Queue
+  description: |-
+    Swagger Document for Task Queue Django
+  contact:
+    email: bilalsaeed0696@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost/api/
+tags:
+  - name: APIs
+    description: Task Queue APIs
+paths:
+  /tasks:
+    post:
+      tags:
+        - pet
+      summary: Create new task
+      description: Create new task by object id
+      operationId: createTask
+      requestBody:
+        description: Create new task by object id
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/task_request_object'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order_response_object'
+  
+  /tasks/<id>:
+    get:
+      tags:
+        - pet
+      summary: Get task
+      description: Get task by job id
+      operationId: getTask
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/order_response_object'
+
+components:
+  schemas:
+    order_response_object:
+      type: object
+      properties:
+        job_id:
+          type: integer
+          format: int64
+          example: 10
+        status:
+          type: string
+          description: Job Status
+          example: processing
+          enum:
+            - processing
+            - cancelled
+            - complete
+        object_id:
+          type: integer
+          format: int64
+          example: 10
+        time_utilized:
+          type: integer
+          description: time utilized in execution (seconds)
+          format: int32
+          example: 7
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+      xml:
+        name: order
+    task_request_object:
+      type: object
+      properties:
+        object_id:
+          type: integer
+          format: int64
+          example: 1

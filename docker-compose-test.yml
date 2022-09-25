@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: ./executer
+    env_file:
+      - .env.test
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8001/api/health"]
+        interval: 5s
+        timeout: 10s
+        retries: 5
+  
+  executer:
+    build:
+      context: ./executer
+      dockerfile: Dockerfile.exec
+    env_file:
+      - .env.test
+    depends_on:
+      - api
+      - db
+
+  nginx:
+    build: ./executer/nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+      - db
+  
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data_test:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test
+  
+  test-service:
+    build: ./test_client
+    links:
+      - api
+    depends_on:
+      api:
+        condition: service_healthy
+  
+volumes:
+  postgres_data_test:
